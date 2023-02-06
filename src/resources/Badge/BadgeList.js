@@ -4,10 +4,9 @@ import { Container, Grid, Hidden, useMediaQuery, AppBar, Tabs, Tab, makeStyles, 
 import { useCheckAuthenticated } from '@semapps/auth-provider';
 import CardsList from '../../commons/lists/CardsList';
 import BadgeCard from './BadgeCard';
+import AssertionCard from "../Assertion/AssertionCard";
 import HeaderTitle from '../../layout/HeaderTitle';
 import ProfileCard from '../../commons/cards/ProfileCard';
-import Alert from "@material-ui/lab/Alert";
-import AppIcon from '../../config/AppIcon';
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -24,22 +23,22 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const BadgeList = (props) => {
-  useCheckAuthenticated();
+  const { identity } = useCheckAuthenticated();
   const classes = useStyles();
   const [tab, setTab] = useState(0);
   const translate = useTranslate();
   return (
     <>
       <HeaderTitle
-        actions={{ '/Badge/create': "Créer un badge" }}
+        actions={{ '/Badge/create': "Créer un badge", '/Assertion/create': "Importer" }}
       >
         {translate('app.page.events')}
       </HeaderTitle>
       <AppBar position="relative" className={classes.appBar}>
         <Container>
           <Tabs value={tab} onChange={(_, v) => setTab(v)} indicatorColor="primary" textColor="primary">
-            <Tab label={translate('app.tab.next_events')} />
-            <Tab label={translate('app.tab.finished_events')} />
+            <Tab label="Badges émis" />
+            <Tab label="Badges créés" />
           </Tabs>
         </Container>
       </AppBar>
@@ -47,14 +46,15 @@ const BadgeList = (props) => {
       <Container>
         <Grid container spacing={3}>
           <Grid item xs={12} md={8} lg={9}>
-            {/*<Box mb={2}>*/}
-            {/*  <Alert icon={<AppIcon />} variant="filled" className={classes.mission}>*/}
-            {/*    {translate('app.description_long')}*/}
-            {/*  </Alert>*/}
-            {/*</Box>*/}
-            <ListBase perPage={1000} {...props}>
-              <CardsList CardComponent={BadgeCard} link="show" />
-            </ListBase>
+            {tab === 0 ?
+              <ListBase perPage={1000} {...props} resource="Assertion" filter={{ 'dc:creator': identity?.id }} sort={{ field: 'dc:created', order: 'DESC' }}>
+                <CardsList CardComponent={AssertionCard} link="show" />
+              </ListBase>
+              :
+              <ListBase perPage={1000} {...props}>
+                <CardsList CardComponent={BadgeCard} link="show" />
+              </ListBase>
+            }
           </Grid>
           <Hidden smDown>
             <Grid item md={4} lg={3}>

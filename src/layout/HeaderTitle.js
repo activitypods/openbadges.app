@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
     lineHeight: 1,
   },
   button: {
-    marginRight: 10,
+    marginLeft: 10,
   },
 }));
 
@@ -35,7 +35,7 @@ const HeaderTitle = ({ children, actions, record }) => {
                 {actions &&
                   Object.entries(actions).map(([url, label], i) => (
                     <Link to={url} key={i}>
-                      <Button variant="contained" color="primary">
+                      <Button variant="contained" color="primary" className={classes.button}>
                         {label}
                       </Button>
                     </Link>
