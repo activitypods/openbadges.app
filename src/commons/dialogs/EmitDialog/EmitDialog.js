@@ -1,5 +1,13 @@
 import React, { useCallback, useState } from 'react';
-import {useShowContext, useTranslate, AutocompleteInput, CreateBase, useCreate, useDataProvider} from 'react-admin';
+import {
+  useShowContext,
+  useTranslate,
+  AutocompleteInput,
+  CreateBase,
+  useCreate,
+  useDataProvider,
+  useNotify
+} from 'react-admin';
 import {
   Button,
   Dialog,
@@ -40,7 +48,6 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: 0,
     paddingRight: 0,
     marginRight: 24,
-    height: 200,
     [theme.breakpoints.down('sm')]: {
       padding: '0px 16px',
       margin: 0,
@@ -52,6 +59,8 @@ const EmitDialog = ({ close, badgeUri }) => {
   const classes = useStyles();
   const { identity } = useCheckAuthenticated();
   const { record } = useShowContext();
+  const outbox = useOutbox();
+  const notify = useNotify();
   const dataProvider = useDataProvider();
   const translate = useTranslate();
   const xs = useMediaQuery((theme) => theme.breakpoints.down('xs'), { noSsr: true });
@@ -59,24 +68,7 @@ const EmitDialog = ({ close, badgeUri }) => {
   const emit = useCallback(async ({ recipientUri }) => {
     const { data: recipient } = await dataProvider.getOne('Profile', { id: recipientUri });
 
-    // const value = await dataProvider.create('Assertion', { data: {
-    //   type: 'obi:Assertion',
-    //     'obi:recipient': {
-    //       type: 'http://schema.org/url',
-    //       'obi:identityHash': {
-    //         '@id': recipient.describes
-    //       },
-    //     },
-    //     'obi:badge': {
-    //       '@id': badgeUri
-    //     },
-    //     'obi:issueDate': (new Date()).toISOString(),
-    //     'obi:verify': {
-    //       type: 'obi:HostedBadge'
-    //     }
-    // }});
-
-    const value = await dataProvider.create('Assertion', { data: {
+    const { data: assertion } = await dataProvider.create('Assertion', { data: {
       type: 'Assertion',
       recipient: {
         type: 'schema:url',
@@ -89,10 +81,20 @@ const EmitDialog = ({ close, badgeUri }) => {
       }
     }});
 
-    console.log('value', value);
+    console.log('assertion', assertion);
 
+    await outbox.post({
+      type: ACTIVITY_TYPES.ANNOUNCE,
+      actor: outbox.owner,
+      object: assertion.id,
+      target: recipient.describes,
+      to: recipient.describes,
+    });
 
-  }, [dataProvider, badgeUri])
+    notify(`Badge accordé et partagé à ${recipient['vcard:given-name']}`);
+
+    close();
+  }, [dataProvider, badgeUri, outbox, notify, close])
 
   if (!identity) return null;
 
