@@ -1,8 +1,8 @@
-import AssertionCreate from "./AssertionCreate";
+import AssertionShow from "./AssertionShow";
 
 export default {
   config: {
-    create: AssertionCreate,
+    show: AssertionShow,
     options: {
       label: 'Badges',
     },

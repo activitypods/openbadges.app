@@ -6,7 +6,7 @@ import CreatePage from '../../layout/CreatePage';
 const BakedBadgeCreate = (props) => (
   <CreateBase {...props}>
     <CreatePage title="Importer un badge">
-      <SimpleForm redirect="show">
+      <SimpleForm redirect="/Assertion">
         <ImageInput source="schema:image" accept="image/*">
           <ImageField source="src" />
         </ImageInput>

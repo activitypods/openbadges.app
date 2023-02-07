@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTranslate, getFieldLabelTranslationArgs, useShowContext } from 'react-admin';
 import { Box, Grid, Hidden, makeStyles, Container } from '@material-ui/core';
+import get from 'lodash/get';
 import BodyLabel from './BodyLabel';
 import StickyBox from "../../cards/StickyBox";
 
@@ -18,7 +19,9 @@ const BodyList = ({ children, aside }) => {
   if (!loaded) return null;
 
   const fields = React.Children.toArray(children).filter(
-    (field) => field && record[field.props.source] && React.isValidElement(field)
+    (field) => {
+      return field && get(record, field.props.source) && React.isValidElement(field)
+    }
   );
 
   return (

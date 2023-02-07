@@ -18,34 +18,6 @@ const useStyles = makeStyles((theme) => ({
       flexDirection: 'column',
     },
   },
-  image: {
-    width: 180,
-    minWidth: 180,
-    minHeight: 145,
-    backgroundColor: theme.palette.grey['300'],
-    [theme.breakpoints.down('xs')]: {
-      width: '100%',
-    },
-  },
-  date: {
-    width: 180,
-    minWidth: 180,
-    minHeight: 145,
-    backgroundImage: `radial-gradient(circle at 50% 14em, ${theme.palette.primary.light} 0%, ${theme.palette.primary.main} 100%)`,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    [theme.breakpoints.down('xs')]: {
-      width: '100%',
-    },
-    padding: 0,
-    color: 'white',
-  },
-  day: {
-    fontSize: 50,
-    lineHeight: 1.3,
-  },
   content: {
     flex: '1 0 auto',
     flexShrink: 1,
@@ -57,47 +29,29 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const CardsList = ({ CardComponent, link }) => {
+const CardsList = ({ CardComponent, image, link }) => {
   const classes = useStyles();
   const { ids, data, basePath, loading } = useListContext();
-
-  console.log('data', data);
 
   return loading ? (
     <Loading loadingPrimary="ra.page.loading" loadingSecondary="ra.message.loading" className={classes.loading} />
   ) : (
-    ids.map((id) => {
-      const image = data[id]?.['schema:image'];
-      return (
-        <Link key={id} to={linkToRecord(basePath, id, link)} className={classes.root}>
-          <Card key={id} className={classes.details}>
-            {image ? (
-              <CardMedia className={classes.image} image={Array.isArray(image) ? image[0] : image} />
-            ) : (
-              <CardContent className={classes.date}>
-                <DateField record={data[id]} variant="subtitle1" source="startTime" options={{ weekday: 'long' }} />
-                <DateField
-                  record={data[id]}
-                  variant="h4"
-                  source="startTime"
-                  options={{ day: 'numeric' }}
-                  className={classes.day}
-                />
-                <DateField record={data[id]} variant="subtitle1" source="startTime" options={{ month: 'long' }} />
-              </CardContent>
-            )}
-            <CardContent className={classes.content}>
-              <CardComponent record={data[id]} />
-            </CardContent>
-          </Card>
-        </Link>
-      );
-    })
+    ids.map((id) => (
+      <Link key={id} to={linkToRecord(basePath, id, link)} className={classes.root}>
+        <Card key={id} className={classes.details}>
+          {React.cloneElement(image, { record: data[id] })}
+          <CardContent className={classes.content}>
+            <CardComponent record={data[id]} />
+          </CardContent>
+        </Card>
+      </Link>
+    ))
   );
 };
 
 CardsList.defaultProps = {
   link: 'show',
+  image: <CardMedia />
 };
 
 export default CardsList;

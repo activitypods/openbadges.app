@@ -15,6 +15,9 @@ export default {
   },
   dataModel: {
     types: ['obi:BadgeClass'],
+    list: {
+      blankNodes: ['obi:criteria']
+    }
   },
   translations: {
     fr: {
@@ -24,7 +27,9 @@ export default {
         'schema:description': 'Description',
         'schema:image': 'Image',
         'dc:creator': "Emetteur",
-        'dc:created': "Date de création"
+        'dc:created': "Date de création",
+        'recipient': 'Destinataires',
+        'criteria.narrative': 'Critères'
       },
     },
   },

@@ -1,10 +1,9 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import {
   useShowContext,
   useTranslate,
   AutocompleteInput,
   CreateBase,
-  useCreate,
   useDataProvider,
   useNotify
 } from 'react-admin';
@@ -18,7 +17,7 @@ import {
   useMediaQuery,
 } from '@material-ui/core';
 import { useCheckAuthenticated } from '@semapps/auth-provider';
-import { useCollection, useOutbox, ACTIVITY_TYPES } from '@semapps/activitypub-components';
+import { useOutbox, ACTIVITY_TYPES } from '@semapps/activitypub-components';
 import { ReferenceInput } from '@semapps/input-components';
 import { Form } from 'react-final-form';
 
@@ -81,8 +80,6 @@ const EmitDialog = ({ close, badgeUri }) => {
       }
     }});
 
-    console.log('assertion', assertion);
-
     await outbox.post({
       type: ACTIVITY_TYPES.ANNOUNCE,
       actor: outbox.owner,
@@ -91,7 +88,7 @@ const EmitDialog = ({ close, badgeUri }) => {
       to: recipient.describes,
     });
 
-    notify(`Badge accordé et partagé à ${recipient['vcard:given-name']}`);
+    notify(`Badge accordé et partagé à ${recipient['vcard:given-name']}`, { type: 'success' });
 
     close();
   }, [dataProvider, badgeUri, outbox, notify, close])

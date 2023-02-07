@@ -96,7 +96,7 @@ const theme = createTheme({
       image: {
         width: '100%',
         margin: 0,
-        maxHeight: 200,
+        maxHeight: 'unset',
         objectFit: 'cover',
       },
     },

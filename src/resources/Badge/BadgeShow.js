@@ -1,6 +1,10 @@
 import React, { useCallback } from 'react';
 import { ShowBase, useRecordContext, useTranslate } from 'react-admin';
 import { useCheckAuthenticated } from '@semapps/auth-provider';
+import { ImageField, ReferenceField } from '@semapps/field-components';
+import { AvatarWithLabelField } from '@semapps/field-components';
+import { ReferenceCollectionField } from '@semapps/activitypub-components';
+import { GridList } from '@semapps/list-components';
 import MarkdownField from '../../commons/fields/MarkdownField';
 import HeaderShow from '../../layout/HeaderShow';
 import BodyList from '../../commons/lists/BodyList/BodyList';
@@ -22,14 +26,6 @@ const LinkToExternalApp = ({ type, linkType = 'show', children }) => {
 
 const BadgeShow = (props) => {
   const { identity } = useCheckAuthenticated();
-  const translate = useTranslate();
-  const contactFieldLabel = useCallback(record => {
-    if (identity?.id === record['dc:creator']) {
-      return translate('app.action.contact_attendees')
-    } else {
-      return translate('app.action.contact_organizer');
-    }
-  }, [identity, translate]);
   if (!identity?.id) return null;
   return (
     <ShowBase {...props}>
@@ -52,21 +48,21 @@ const BadgeShow = (props) => {
           }
         >
           <MarkdownField source="description" addLabel={false} />
-          {/*<ReferenceCollectionField reference="Actor" source="apods:attendees">*/}
-          {/*  <GridList xs={4} sm={2} linkType={false}>*/}
-          {/*    <ReferenceField reference="Profile" source="url" link={false}>*/}
-          {/*        <LinkToExternalApp type="as:Profile">*/}
-          {/*          <AvatarWithLabelField*/}
-          {/*            label="vcard:given-name"*/}
-          {/*            image="vcard:photo"*/}
-          {/*            defaultLabel={translate('app.user.unknown')}*/}
-          {/*            labelColor="grey.300"*/}
-          {/*          />*/}
-          {/*        </LinkToExternalApp>*/}
-          {/*    </ReferenceField>*/}
-          {/*  </GridList>*/}
-          {/*</ReferenceCollectionField>*/}
-          {/*<ContactField label={contactFieldLabel} source="dc:creator" context="id" />*/}
+          <MarkdownField source="criteria.narrative" />
+          <ReferenceCollectionField reference="Actor" source="recipient">
+            <GridList xs={4} sm={2} linkType={false}>
+              <ReferenceField reference="Profile" source="url" link={false}>
+                  <LinkToExternalApp type="as:Profile">
+                    <AvatarWithLabelField
+                      label="vcard:given-name"
+                      image="vcard:photo"
+                      defaultLabel="Inconnu"
+                      labelColor="grey.300"
+                    />
+                  </LinkToExternalApp>
+              </ReferenceField>
+            </GridList>
+          </ReferenceCollectionField>
         </BodyList>
       </>
     </ShowBase>

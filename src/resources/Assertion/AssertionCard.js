@@ -4,7 +4,6 @@ import Chip from '../../commons/Chip';
 import { ReferenceField } from '@semapps/field-components';
 import { makeStyles, Box } from '@material-ui/core';
 import EventIcon from '@material-ui/icons/Event';
-import StarBorderIcon from '@material-ui/icons/StarBorder';
 import FaceIcon from '@material-ui/icons/Face';
 
 const useStyles = makeStyles((theme) => ({
@@ -28,31 +27,37 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const Test = props => {
+  console.log('test', props);
+  return null;
+}
+
 const AssertionCard = ({ record }) => {
   const classes = useStyles();
-  console.log('record', record);
   return (
     <>
-      <TextField variant="h2" color="primary" record={record} source="schema:name" className={classes.title} />
+      <ReferenceField record={record} reference="Badge" source="badge" link={false}>
+        <TextField variant="h2" color="primary" source="schema:name" className={classes.title} />
+      </ReferenceField>
       <Box pb={1}>
         <Chip icon={<EventIcon />}>
           <DateField
             record={record}
-            source="dc:created"
-            options={{ weekday: 'short', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' }}
+            source="issuedOn"
+            options={{ weekday: 'short', month: 'long', day: 'numeric', year: 'numeric' }}
             showTime
           />
         </Chip>
         <Chip icon={<FaceIcon />}>
-          <ReferenceField record={record} reference="Actor" source="dc:creator" link={false}>
-            <ReferenceField reference="Profile" source="url" link={false}>
-              <TextField source="vcard:given-name" />
+          <ReferenceField record={record} reference="Badge" source="badge" link={false}>
+            <ReferenceField reference="Actor" source="issuer" link={false}>
+              <TextField source="schema:name" />
             </ReferenceField>
           </ReferenceField>
         </Chip>
       </Box>
       <ReferenceField record={record} reference="Badge" source="badge" link={false}>
-        <TextField record={record} source="description" className={classes.description} />
+        <TextField source="description" className={classes.description} />
       </ReferenceField>
     </>
   );

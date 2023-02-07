@@ -16,6 +16,10 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     backgroundColor: theme.palette.primary.main,
   },
+  toolbar: {
+    width: 1232,
+    margin: 'auto',
+  },
   menuButton: {
     color: 'white',
   },
@@ -40,7 +44,7 @@ const AppBar = ({ title }) => {
   const classes = useStyles();
   return (
     <MuiAppBar position="sticky" className={classes.root}>
-      <Toolbar>
+      <Toolbar className={classes.toolbar}>
         <Link to="/Badge">
           <IconButton edge="start" className={classes.menuButton} color="inherit">
             <AppIcon fontSize="large" />
