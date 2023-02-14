@@ -27,11 +27,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Test = props => {
-  console.log('test', props);
-  return null;
-}
-
 const AssertionCard = ({ record }) => {
   const classes = useStyles();
   return (

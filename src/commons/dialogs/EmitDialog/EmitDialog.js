@@ -5,7 +5,7 @@ import {
   AutocompleteInput,
   CreateBase,
   useDataProvider,
-  useNotify
+  useNotify, TextInput
 } from 'react-admin';
 import {
   Button,
@@ -64,7 +64,7 @@ const EmitDialog = ({ close, badgeUri }) => {
   const translate = useTranslate();
   const xs = useMediaQuery((theme) => theme.breakpoints.down('xs'), { noSsr: true });
 
-  const emit = useCallback(async ({ recipientUri }) => {
+  const emit = useCallback(async ({ recipientUri, evidence }) => {
     const { data: recipient } = await dataProvider.getOne('Profile', { id: recipientUri });
 
     const { data: assertion } = await dataProvider.create('Assertion', { data: {
@@ -75,6 +75,9 @@ const EmitDialog = ({ close, badgeUri }) => {
       },
       badge: badgeUri,
       issuedOn: (new Date()).toISOString(),
+      evidence: evidence && {
+        narrative: evidence
+      },
       verification: {
         type: 'HostedBadge'
       }
@@ -99,7 +102,7 @@ const EmitDialog = ({ close, badgeUri }) => {
     <CreateBase resource="Assertion" basePath="/Assertion">
       <Form
         onSubmit={emit}
-        render={({ handleSubmit }) => (
+        render={({ handleSubmit, submitting }) => (
           <form>
             <Dialog fullWidth={!xs} open={true} onClose={close} classes={{ paper: classes.dialogPaper }}>
               <DialogTitle className={classes.title}>Emettre le Badge</DialogTitle>
@@ -107,13 +110,14 @@ const EmitDialog = ({ close, badgeUri }) => {
                 <ReferenceInput label="Destinataire" reference="Profile" source="recipientUri">
                   <AutocompleteInput optionText="vcard:given-name" fullWidth />
                 </ReferenceInput>
+                <TextInput label="Evidence" source="evidence" fullWidth multiline minRows={3} />
               </DialogContent>
               <DialogActions className={classes.actions}>
                 <Button variant="text" size="medium" onClick={close}>
                   {translate('ra.action.close')}
                 </Button>
-                <Button variant="contained" color="primary" size="medium" onClick={handleSubmit}>
-                  Continue
+                <Button variant="contained" color="primary" size="medium" disabled={submitting} onClick={handleSubmit}>
+                  Émettre
                 </Button>
               </DialogActions>
             </Dialog>

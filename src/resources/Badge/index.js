@@ -26,9 +26,10 @@ export default {
         'schema:name': 'Nom',
         'schema:description': 'Description',
         'schema:image': 'Image',
-        'dc:creator': "Emetteur",
+        'dc:creator': "Émetteur",
         'dc:created': "Date de création",
         'recipient': 'Destinataires',
+        'issuer': 'Émetteur',
         'criteria.narrative': 'Critères'
       },
     },

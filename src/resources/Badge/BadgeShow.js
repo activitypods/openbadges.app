@@ -13,6 +13,7 @@ import EditButton from '../../commons/buttons/EditButton';
 import ShareButton from '../../commons/buttons/ShareButton';
 import useOpenExternalApp from "../../hooks/useOpenExternalApp";
 import BadgesActionsCard from './BadgeActionsCard';
+import ProfileField from "../../commons/fields/ProfileField";
 
 const LinkToExternalApp = ({ type, linkType = 'show', children }) => {
   const record = useRecordContext();
@@ -49,6 +50,11 @@ const BadgeShow = (props) => {
         >
           <MarkdownField source="description" addLabel={false} />
           <MarkdownField source="criteria.narrative" />
+          <ReferenceField reference="Actor" source="issuer" link={false}>
+            <ReferenceField reference="Profile" source="url" link={false}>
+              <ProfileField />
+            </ReferenceField>
+          </ReferenceField>
           <ReferenceCollectionField reference="Actor" source="recipient">
             <GridList xs={4} sm={2} linkType={false}>
               <ReferenceField reference="Profile" source="url" link={false}>

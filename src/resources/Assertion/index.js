@@ -18,7 +18,9 @@ export default {
       name: 'Badge |||| Badges',
       fields: {
         'schema:image': 'Image',
-        'obi:recipient': 'Destinataire'
+        'recipient': 'Destinataire',
+        'issuedOn': "Date d'émisssion",
+        'evidence.narrative': 'Évidences'
       },
     },
   },

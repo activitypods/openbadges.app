@@ -57,9 +57,11 @@ const AssertionHeader = () => {
           <Grid item xs={6}>
             <Box p={2}>
               <Typography align="center">
-                <RecipientField record={record}>
-                  <TextField source="vcard:given-name" variant="h2"  />
-                </RecipientField>
+                <Box pt={3}>
+                  <RecipientField record={record}>
+                    <TextField source="vcard:given-name" variant="h2"  />
+                  </RecipientField>
+                </Box>
                 <Box p={1}>
                   A reçu le badge
                 </Box>

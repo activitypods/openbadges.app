@@ -1,14 +1,17 @@
 import React from 'react';
-import { ShowBase, useRecordContext, useTranslate } from 'react-admin';
+import {ShowBase, useRecordContext, useTranslate} from 'react-admin';
 import { useCheckAuthenticated } from '@semapps/auth-provider';
+import { ReferenceField } from '@semapps/field-components';
+import { AvatarWithLabelField } from '@semapps/field-components';
+import { ReferenceCollectionField } from '@semapps/activitypub-components';
+import { GridList } from '@semapps/list-components';
 import MarkdownField from '../../commons/fields/MarkdownField';
 import BodyList from '../../commons/lists/BodyList/BodyList';
-import BadgeDetails from "../Badge/BadgeDetails";
-import BadgesActionsCard from "../Badge/BadgeActionsCard";
-import EditButton from '../../commons/buttons/EditButton';
-import ShareButton from '../../commons/buttons/ShareButton';
-import useOpenExternalApp from "../../hooks/useOpenExternalApp";
 import AssertionHeader from "./AssertionHeader";
+import AssertionActionsCard from "./AssertionActionsCard";
+import AssertionDetails from "./AssertionDetails";
+import ProfileField from "../../commons/fields/ProfileField";
+import useOpenExternalApp from "../../hooks/useOpenExternalApp";
 
 const LinkToExternalApp = ({ type, linkType = 'show', children }) => {
   const record = useRecordContext();
@@ -28,30 +31,38 @@ const AssertionShow = (props) => {
     <ShowBase {...props}>
       <>
         <AssertionHeader />
-        {/*<BodyList*/}
-        {/*  aside={*/}
-        {/*    <BadgesActionsCard>*/}
-        {/*      <BadgeDetails orientation="vertical" />*/}
-        {/*    </BadgesActionsCard>*/}
-        {/*  }*/}
-        {/*>*/}
-        {/*  <MarkdownField source="description" addLabel={false} />*/}
-        {/*  /!*<ReferenceCollectionField reference="Actor" source="apods:attendees">*!/*/}
-        {/*  /!*  <GridList xs={4} sm={2} linkType={false}>*!/*/}
-        {/*  /!*    <ReferenceField reference="Profile" source="url" link={false}>*!/*/}
-        {/*  /!*        <LinkToExternalApp type="as:Profile">*!/*/}
-        {/*  /!*          <AvatarWithLabelField*!/*/}
-        {/*  /!*            label="vcard:given-name"*!/*/}
-        {/*  /!*            image="vcard:photo"*!/*/}
-        {/*  /!*            defaultLabel={translate('app.user.unknown')}*!/*/}
-        {/*  /!*            labelColor="grey.300"*!/*/}
-        {/*  /!*          />*!/*/}
-        {/*  /!*        </LinkToExternalApp>*!/*/}
-        {/*  /!*    </ReferenceField>*!/*/}
-        {/*  /!*  </GridList>*!/*/}
-        {/*  /!*</ReferenceCollectionField>*!/*/}
-        {/*  /!*<ContactField label={contactFieldLabel} source="dc:creator" context="id" />*!/*/}
-        {/*</BodyList>*/}
+        <BodyList
+          aside={
+            <AssertionActionsCard>
+              <AssertionDetails orientation="vertical" />
+            </AssertionActionsCard>
+          }
+        >
+          <MarkdownField source="evidence.narrative" />
+          <ReferenceField label="Émetteur" reference="Badge" source="badge" link={false}>
+            <ReferenceField reference="Actor" source="issuer" link={false}>
+              <ReferenceField reference="Profile" source="url" link={false}>
+                <ProfileField />
+              </ReferenceField>
+            </ReferenceField>
+          </ReferenceField>
+          <ReferenceField label="Autres destinataires" reference="Badge" source="badge" link={false}>
+            <ReferenceCollectionField reference="Actor" source="recipient">
+              <GridList xs={4} sm={2} linkType={false}>
+                <ReferenceField reference="Profile" source="url" link={false}>
+                  <LinkToExternalApp type="as:Profile">
+                    <AvatarWithLabelField
+                      label="vcard:given-name"
+                      image="vcard:photo"
+                      defaultLabel="Inconnu"
+                      labelColor="grey.300"
+                    />
+                  </LinkToExternalApp>
+                </ReferenceField>
+              </GridList>
+            </ReferenceCollectionField>
+          </ReferenceField>
+        </BodyList>
       </>
     </ShowBase>
   );
