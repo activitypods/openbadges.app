@@ -4,6 +4,8 @@
 
 # OpenBadges.app
 
+> ⚠️ Requires an ActivityPods provider running with [this PR](https://github.com/assemblee-virtuelle/activitypods/pull/49)
+
 ## Getting started
 
 Requirements:
